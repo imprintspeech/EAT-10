@@ -1,307 +1,149 @@
 <!DOCTYPE html>
-
 <html lang="zh-Hant">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>吞嚥功能評估工具 (EAT-10)</title>
-
     <style>
-
         body { font-family: "Microsoft JhengHei", sans-serif; max-width: 700px; margin: 30px auto; padding: 20px; background: #f0f2f5; color: #333; }
-
         .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-
         h2 { text-align: center; color: #1a73e8; }
-
         .question { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px dashed #ddd; }
-
         .question p { font-weight: bold; margin-bottom: 10px; }
-
         label { display: block; margin: 10px 0; cursor: pointer; padding: 8px; border-radius: 4px; transition: 0.2s; border: 1px solid transparent; }
-
         label:hover { background: #f8f9fa; border-color: #eee; }
-
         input[type="radio"] { margin-right: 10px; transform: scale(1.2); }
-
         select, input[type="text"] { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
-
         button { width: 100%; background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-size: 18px; margin-top: 20px; font-weight: bold; }
-
         button:hover { background: #1557b0; }
-
         button:disabled { background: #ccc; cursor: not-allowed; }
-
         #resultArea { display: none; text-align: center; }
-
         .score-box { font-size: 48px; color: #d93025; margin: 20px 0; font-weight: bold; }
-
         .footer-note { color: #666; margin-top: 30px; font-size: 14px; background: #fffde7; padding: 10px; border-radius: 5px; }
-
     </style>
-
 </head>
-
 <body>
 
- 
-
 <div class="card" id="mainCard">
-
     <h2>吞嚥功能評估工具 (EAT-10)</h2>
-
     <form id="quizForm">
-
         <div class="question">
-
             <p>1. 姓名：</p>
-
             <input type="text" name="username" placeholder="請輸入姓名" required>
-
         </div>
 
- 
-
         <div class="question">
-
             <p>2. 性別：</p>
-
             <label><input type="radio" name="gender" value="男" required> 男</label>
-
             <label><input type="radio" name="gender" value="女"> 女</label>
-
         </div>
-
- 
 
         <div class="question">
-
             <p>3. 年齡範圍：</p>
-
             <select name="age" required>
-
                 <option value="">-- 請選擇 --</option>
-
                 <option value="18歲以下">18歲以下</option>
-
                 <option value="19-30歲">19-30歲</option>
-
                 <option value="31-50歲">31-50歲</option>
-
                 <option value="51-70歲">51-70歲</option>
-
                 <option value="71歲以上">71歲以上</option>
-
             </select>
-
         </div>
-
- 
 
         <div id="questionsList"></div>
 
- 
-
         <button type="submit" id="submitBtn">提交並查看評估結果</button>
-
     </form>
 
- 
-
     <div id="resultArea">
-
         <h2>評估完成！</h2>
-
         <p>您的總分為：</p>
-
         <div class="score-box" id="scoreDisplay">0</div>
-
         <div id="msgDisplay" style="font-size: 18px; line-height: 1.6; color: #444;"></div>
-
-       
-
+        
         <div class="footer-note">
-
             註：EAT-10 是一項初步篩選工具。總分大於或等於 3 分可能代表吞嚥功能異常。此結果僅供參考，若有嚴重不適或疑慮，請務必諮詢言語治療師。
-
         </div>
-
-       
-
+        
         <button onclick="location.reload()" style="background:#666; margin-top:20px;">重新填寫</button>
-
     </div>
-
 </div>
 
- 
-
 <script>
-
-    // 1. const scriptURL = 'https://script.google.com/macros/s/AKfycbylY15dxO8SRgApC_gyBlhi4fzS7DfE2GqUJwQBXzjdAg0jZKirsfCpz8li4lwuExi9/exec';
-
- 
-
-    // 2. 題目列表
+    // 定義傳送資料的網址（已取消註解）
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbylY15dxO8SRgApC_gyBlhi4fzS7DfE2GqUJwQBXzjdAg0jZKirsfCpz8li4lwuExi9/exec';
 
     const myQuestions = [
-
         "吞嚥問題令我體重下降",
-
         "吞嚥問題影響我外出用餐",
-
         "吞嚥流質飲料時要花很多力氣",
-
         "吞嚥固體食物時要花很多力氣",
-
         "吞藥丸時要花很多力氣",
-
         "吞嚥時會感到痛楚",
-
         "吞嚥問題減少我進食的樂趣",
-
         "吞嚥後感到食物會黏在咽喉",
-
         "進食時會咳嗽",
-
         "吞嚥讓我感到有壓力"
-
     ];
 
- 
-
-    // 自動生成題目 HTML
-
     const qContainer = document.getElementById('questionsList');
-
     myQuestions.forEach((text, i) => {
-
         const index = i + 1;
-
         const div = document.createElement('div');
-
         div.className = 'question';
-
         div.innerHTML = `
-
             <p>${index + 3}. ${text}</p>
-
             <label><input type="radio" name="q${index}" value="0" required> 沒有問題 (0分)</label>
-
             <label><input type="radio" name="q${index}" value="1"> 輕微問題 (1分)</label>
-
             <label><input type="radio" name="q${index}" value="2"> 中度問題 (2分)</label>
-
             <label><input type="radio" name="q${index}" value="3"> 重度問題 (3分)</label>
-
             <label><input type="radio" name="q${index}" value="4"> 非常嚴重 (4分)</label>
-
         `;
-
         qContainer.appendChild(div);
-
     });
-
- 
-
-    // 表單提交處理
 
     document.getElementById('quizForm').addEventListener('submit', function(e) {
-
         e.preventDefault();
-
         const btn = document.getElementById('submitBtn');
-
         btn.disabled = true;
-
-        btn.innerText = "資料傳送中，請稍候...";
-
- 
+        btn.innerText = "正在處理中...";
 
         const formData = new FormData(this);
-
         let totalScore = 0;
-
-       
-
-        // 計算總分
-
+        
         for(let i=1; i<=10; i++) {
-
-            totalScore += parseInt(formData.get('q'+i));
-
+            totalScore += parseInt(formData.get('q'+i) || 0);
         }
-
- 
-
-        // 3. 評分邏輯 (EAT-10 標準通常為 3 分門檻)
 
         let resultMsg = "";
-
         if (totalScore >= 15) {
-
             resultMsg = "<b>【高風險】</b><br>您的得分明顯偏高，顯示吞嚥功能可能有嚴重影響。強烈建議儘快諮詢言語治療師進行詳細吞嚥檢查。";
-
         } else if (totalScore >= 3) {
-
             resultMsg = "<b>【疑似異常】</b><br>您的得分達到 3 分或以上，顯示可能有初步的吞嚥困難。建議留意進食安全，並考慮尋求專業評估。";
-
         } else {
-
             resultMsg = "<b>【目前正常】</b><br>您的得分顯示目前的吞嚥功能尚在正常範圍內。請繼續保持良好的進食習慣。";
-
         }
 
- 
+        // 先顯示結果給使用者，改善體驗
+        document.getElementById('quizForm').style.display = 'none';
+        document.getElementById('resultArea').style.display = 'block';
+        document.getElementById('scoreDisplay').innerText = totalScore + " 分";
+        document.getElementById('msgDisplay').innerHTML = resultMsg;
+        window.scrollTo(0, 0);
 
-        // 準備傳送到 Google 的數據
-
+        // 背景傳送資料到 Google
         formData.append('score', totalScore);
+        formData.append('resultMsg', resultMsg.replace(/<[^>]*>/g, ''));
 
-        formData.append('resultMsg', resultMsg.replace(/<[^>]*>/g, '')); // 去除 HTML 標籤後儲存
-
- 
-
-        // 執行傳送
-
-        fetch(scriptURL, { method: 'POST', body: formData })
-
-        .then(response => {
-
-            // 隱藏表單，顯示結果
-
-            document.getElementById('quizForm').style.display = 'none';
-
-            document.getElementById('resultArea').style.display = 'block';
-
-            document.getElementById('scoreDisplay').innerText = totalScore + " 分";
-
-            document.getElementById('msgDisplay').innerHTML = resultMsg;
-
-            window.scrollTo(0, 0); // 回到頂部看結果
-
+        fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
+        .then(() => {
+            console.log('資料已成功傳送（背景）');
         })
-
         .catch(error => {
-
-            alert('傳送失敗！請確認 GAS 部署網址是否正確。');
-
-            btn.disabled = false;
-
-            btn.innerText = "提交查看結果";
-
+            console.error('傳送失敗，但結果已顯示。', error);
         });
-
     });
-
 </script>
 
- 
-
 </body>
-
 </html>
