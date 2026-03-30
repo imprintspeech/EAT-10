@@ -110,8 +110,8 @@
         div.innerHTML = `<p>${index + 3}. ${text}</p>
             <label><input type="radio" name="q${index}" value="0" required> 沒有問題 (0分)</label>
             <label><input type="radio" name="q${index}" value="1"> 問題輕微 (1分)</label>
-            <label><input type="radio" name="q${index}" value="2"> 問題中度嚴重 (2分)</label>
-            <label><input type="radio" name="q${index}" value="3"> 問題重度嚴重 (3分)</label>
+            <label><input type="radio" name="q${index}" value="2"> 問題稍為嚴重 (2分)</label>
+            <label><input type="radio" name="q${index}" value="3"> 問題中度嚴重 (3分)</label>
             <label><input type="radio" name="q${index}" value="4"> 問題非常嚴重 (4分)</label>`;
         qContainer.appendChild(div);
     });
@@ -130,7 +130,7 @@
         if (totalScore >= 15) {
             resultMsg = "<b>【高風險】</b><br>您的得分明顯偏高，建議儘快諮詢言語治療師。";
         } else if (totalScore >= 3) {
-            resultMsg = "<b>【疑似異常】</b><br>您的得分達到 3 分或以上，顯示可能有初步的吞嚥困難。";
+            resultMsg = "<b>【疑似異常】</b><br>您的得分達到 3 分或以上，顯示可能有初步的吞嚥困難，建議諮詢言語治療師。";
         } else {
             resultMsg = "<b>【目前正常】</b><br>您的得分顯示目前的吞嚥功能尚在正常範圍內。";
         }
