@@ -7,12 +7,16 @@
     <style>
         body { font-family: "Microsoft JhengHei", sans-serif; max-width: 700px; margin: 30px auto; padding: 20px; background: #f0f2f5; color: #333; }
         .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #1a73e8; margin-top: 10px; }
         
-        /* LOGO 居中樣式 */
+        /* LOGO 樣式已更新：放大一倍 */
         .logo-container { text-align: center; margin-bottom: 20px; }
-        .logo-container img { max-width: 180px; height: auto; }
+        .logo-container img { 
+            max-width: 400px; /* 這裡調整為 400px，你可以視情況改為 360px 或更多 */
+            width: 100%;      /* 讓圖片在小螢幕自動縮放，不破壞版面 */
+            height: auto; 
+        }
 
+        h2 { text-align: center; color: #1a73e8; margin-top: 10px; }
         .question { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px dashed #ddd; }
         .question p { font-weight: bold; margin-bottom: 10px; }
         label { display: block; margin: 10px 0; cursor: pointer; padding: 8px; border-radius: 4px; transition: 0.2s; border: 1px solid transparent; }
@@ -28,7 +32,6 @@
         .score-box { font-size: 48px; color: #d93025; margin: 20px 0; font-weight: bold; }
         .footer-note { color: #666; margin-top: 30px; font-size: 14px; background: #fffde7; padding: 10px; border-radius: 5px; }
 
-        /* 聯絡資訊樣式（放在結果頁底部） */
         .contact-info { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; font-size: 14px; color: #666; line-height: 1.8; }
         .contact-info a { color: #1a73e8; text-decoration: none; }
     </style>
@@ -74,17 +77,17 @@
         <div id="msgDisplay" style="font-size: 18px; line-height: 1.6; color: #444;"></div>
         
         <div class="footer-note">
-            註：EAT-10 是一項初步篩選工具。總分大於或等於 3 分可能代表吞嚥功能異常。此結果僅供參考，若有嚴重不適或疑慮，請務必諮詢言語治療師。
+            註：EAT-10 是一項初步篩選工具。總分大於或等於 3 分可能代表吞嚥功能異常。此結果僅供參考。
         </div>
         
         <button onclick="location.reload()" style="background:#666; margin-top:20px;">重新填寫</button>
 
         <div class="contact-info">
             <p><strong>聯絡我們</strong></p>
-            <p>公司名稱：[你的公司名稱]</p>
-            <p>電話：<a href="tel:+85212345678">(852) 1234-5678</a></p>
-            <p>電郵：<a href="mailto:info@example.com">info@example.com</a></p>
-            <p>地址：[你的辦公室地址]</p>
+            <p>公司名稱：銘心言語治療及復康有限公司</p>
+            <p>電話：<a href="tel:+8526845 9034">(852) 6845 9034</a></p>
+            <p>電郵：<a href="mailto:info@imprintspeech.com">info@imprintspeech.com</a></p>
+            <p>網址：<a href="www.imprintspeech.com">www.imprintspeech.com</a></p>
         </div>
     </div>
 </div>
@@ -106,10 +109,10 @@
         div.className = 'question';
         div.innerHTML = `<p>${index + 3}. ${text}</p>
             <label><input type="radio" name="q${index}" value="0" required> 沒有問題 (0分)</label>
-            <label><input type="radio" name="q${index}" value="1"> 輕微問題 (1分)</label>
-            <label><input type="radio" name="q${index}" value="2"> 中度問題 (2分)</label>
-            <label><input type="radio" name="q${index}" value="3"> 重度問題 (3分)</label>
-            <label><input type="radio" name="q${index}" value="4"> 非常嚴重 (4分)</label>`;
+            <label><input type="radio" name="q${index}" value="1"> 問題輕微 (1分)</label>
+            <label><input type="radio" name="q${index}" value="2"> 問題中度嚴重 (2分)</label>
+            <label><input type="radio" name="q${index}" value="3"> 問題重度嚴重 (3分)</label>
+            <label><input type="radio" name="q${index}" value="4"> 問題非常嚴重 (4分)</label>`;
         qContainer.appendChild(div);
     });
 
@@ -125,9 +128,9 @@
 
         let resultMsg = "";
         if (totalScore >= 15) {
-            resultMsg = "<b>【高風險】</b><br>您的得分明顯偏高，顯示吞嚥功能可能有嚴重影響。建議儘快諮詢專業人士。";
+            resultMsg = "<b>【高風險】</b><br>您的得分明顯偏高，建議儘快諮詢言語治療師。";
         } else if (totalScore >= 3) {
-            resultMsg = "<b>【疑似異常】</b><br>您的得分達到 3 分或以上，顯示可能有初步的吞嚥困難。建議諮詢言語治療師。";
+            resultMsg = "<b>【疑似異常】</b><br>您的得分達到 3 分或以上，顯示可能有初步的吞嚥困難。";
         } else {
             resultMsg = "<b>【目前正常】</b><br>您的得分顯示目前的吞嚥功能尚在正常範圍內。";
         }
