@@ -7,37 +7,51 @@
     <style>
         body { font-family: "Microsoft JhengHei", sans-serif; max-width: 700px; margin: 30px auto; padding: 20px; background: #f0f2f5; color: #333; }
         .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: #1a73e8; }
+        h2 { text-align: center; color: #1a73e8; margin-top: 10px; }
+        
+        /* LOGO 居中樣式 */
+        .logo-container { text-align: center; margin-bottom: 20px; }
+        .logo-container img { max-width: 180px; height: auto; }
+
         .question { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px dashed #ddd; }
         .question p { font-weight: bold; margin-bottom: 10px; }
         label { display: block; margin: 10px 0; cursor: pointer; padding: 8px; border-radius: 4px; transition: 0.2s; border: 1px solid transparent; }
         label:hover { background: #f8f9fa; border-color: #eee; }
         input[type="radio"] { margin-right: 10px; transform: scale(1.2); }
         select, input[type="text"] { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        
         button { width: 100%; background: #1a73e8; color: white; border: none; padding: 15px; border-radius: 8px; cursor: pointer; font-size: 18px; margin-top: 20px; font-weight: bold; }
         button:hover { background: #1557b0; }
         button:disabled { background: #ccc; cursor: not-allowed; }
+        
         #resultArea { display: none; text-align: center; }
         .score-box { font-size: 48px; color: #d93025; margin: 20px 0; font-weight: bold; }
         .footer-note { color: #666; margin-top: 30px; font-size: 14px; background: #fffde7; padding: 10px; border-radius: 5px; }
+
+        /* 聯絡資訊樣式（放在結果頁底部） */
+        .contact-info { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; text-align: center; font-size: 14px; color: #666; line-height: 1.8; }
+        .contact-info a { color: #1a73e8; text-decoration: none; }
     </style>
 </head>
 <body>
 
 <div class="card" id="mainCard">
+    <div class="logo-container">
+        <img src="logo.png" alt="公司 LOGO" onerror="this.style.display='none'">
+    </div>
+
     <h2>吞嚥功能評估工具 (EAT-10)</h2>
+    
     <form id="quizForm">
         <div class="question">
             <p>1. 姓名：</p>
             <input type="text" name="username" placeholder="請輸入姓名" required>
         </div>
-
         <div class="question">
             <p>2. 性別：</p>
             <label><input type="radio" name="gender" value="男" required> 男</label>
             <label><input type="radio" name="gender" value="女"> 女</label>
         </div>
-
         <div class="question">
             <p>3. 年齡範圍：</p>
             <select name="age" required>
@@ -49,9 +63,7 @@
                 <option value="71歲以上">71歲以上</option>
             </select>
         </div>
-
         <div id="questionsList"></div>
-
         <button type="submit" id="submitBtn">提交並查看評估結果</button>
     </form>
 
@@ -66,23 +78,24 @@
         </div>
         
         <button onclick="location.reload()" style="background:#666; margin-top:20px;">重新填寫</button>
+
+        <div class="contact-info">
+            <p><strong>聯絡我們</strong></p>
+            <p>公司名稱：[你的公司名稱]</p>
+            <p>電話：<a href="tel:+85212345678">(852) 1234-5678</a></p>
+            <p>電郵：<a href="mailto:info@example.com">info@example.com</a></p>
+            <p>地址：[你的辦公室地址]</p>
+        </div>
     </div>
 </div>
 
 <script>
-    // 定義傳送資料的網址（已取消註解）
     const scriptURL = 'https://script.google.com/macros/s/AKfycbylY15dxO8SRgApC_gyBlhi4fzS7DfE2GqUJwQBXzjdAg0jZKirsfCpz8li4lwuExi9/exec';
 
     const myQuestions = [
-        "吞嚥問題令我體重下降",
-        "吞嚥問題影響我外出用餐",
-        "吞嚥流質飲料時要花很多力氣",
-        "吞嚥固體食物時要花很多力氣",
-        "吞藥丸時要花很多力氣",
-        "吞嚥時會感到痛楚",
-        "吞嚥問題減少我進食的樂趣",
-        "吞嚥後感到食物會黏在咽喉",
-        "進食時會咳嗽",
+        "吞嚥問題令我體重下降", "吞嚥問題影響我外出用餐", "吞嚥流質飲料時要花很多力氣",
+        "吞嚥固體食物時要花很多力氣", "吞藥丸時要花很多力氣", "吞嚥時會感到痛楚",
+        "吞嚥問題減少我進食的樂趣", "吞嚥後感到食物會黏在咽喉", "進食時會咳嗽",
         "吞嚥讓我感到有壓力"
     ];
 
@@ -91,14 +104,12 @@
         const index = i + 1;
         const div = document.createElement('div');
         div.className = 'question';
-        div.innerHTML = `
-            <p>${index + 3}. ${text}</p>
+        div.innerHTML = `<p>${index + 3}. ${text}</p>
             <label><input type="radio" name="q${index}" value="0" required> 沒有問題 (0分)</label>
             <label><input type="radio" name="q${index}" value="1"> 輕微問題 (1分)</label>
             <label><input type="radio" name="q${index}" value="2"> 中度問題 (2分)</label>
             <label><input type="radio" name="q${index}" value="3"> 重度問題 (3分)</label>
-            <label><input type="radio" name="q${index}" value="4"> 非常嚴重 (4分)</label>
-        `;
+            <label><input type="radio" name="q${index}" value="4"> 非常嚴重 (4分)</label>`;
         qContainer.appendChild(div);
     });
 
@@ -110,38 +121,26 @@
 
         const formData = new FormData(this);
         let totalScore = 0;
-        
-        for(let i=1; i<=10; i++) {
-            totalScore += parseInt(formData.get('q'+i) || 0);
-        }
+        for(let i=1; i<=10; i++) { totalScore += parseInt(formData.get('q'+i) || 0); }
 
         let resultMsg = "";
         if (totalScore >= 15) {
-            resultMsg = "<b>【高風險】</b><br>您的得分明顯偏高，顯示吞嚥功能可能有嚴重影響。強烈建議儘快諮詢言語治療師進行詳細吞嚥檢查。";
+            resultMsg = "<b>【高風險】</b><br>您的得分明顯偏高，顯示吞嚥功能可能有嚴重影響。建議儘快諮詢專業人士。";
         } else if (totalScore >= 3) {
-            resultMsg = "<b>【疑似異常】</b><br>您的得分達到 3 分或以上，顯示可能有初步的吞嚥困難。建議留意進食安全，並考慮尋求專業評估。";
+            resultMsg = "<b>【疑似異常】</b><br>您的得分達到 3 分或以上，顯示可能有初步的吞嚥困難。建議諮詢言語治療師。";
         } else {
-            resultMsg = "<b>【目前正常】</b><br>您的得分顯示目前的吞嚥功能尚在正常範圍內。請繼續保持良好的進食習慣。";
+            resultMsg = "<b>【目前正常】</b><br>您的得分顯示目前的吞嚥功能尚在正常範圍內。";
         }
 
-        // 先顯示結果給使用者，改善體驗
         document.getElementById('quizForm').style.display = 'none';
         document.getElementById('resultArea').style.display = 'block';
         document.getElementById('scoreDisplay').innerText = totalScore + " 分";
         document.getElementById('msgDisplay').innerHTML = resultMsg;
         window.scrollTo(0, 0);
 
-        // 背景傳送資料到 Google
         formData.append('score', totalScore);
         formData.append('resultMsg', resultMsg.replace(/<[^>]*>/g, ''));
-
-        fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' })
-        .then(() => {
-            console.log('資料已成功傳送（背景）');
-        })
-        .catch(error => {
-            console.error('傳送失敗，但結果已顯示。', error);
-        });
+        fetch(scriptURL, { method: 'POST', body: formData, mode: 'no-cors' });
     });
 </script>
 
